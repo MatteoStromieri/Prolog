@@ -13,7 +13,7 @@ ordinata([]).
 ordinata([_]).
 ordinata([X,Y|L]):-
     X>=Y,
-	ordinata(L).
+	ordinata([Y|L]).
 
 /*quicksort*/
 quick_sorted([],[]).
