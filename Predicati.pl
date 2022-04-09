@@ -15,6 +15,18 @@ ordinata([X,Y|L]):-
     X>=Y,
 	ordinata([Y|L]).
 
+rivoltata([],[]).
+
+rivoltata([H|T], LR):-
+    rivoltata(T,HR),
+    appiccicata(HR, [H], LR).
+
+appiccicata([],L,L).
+appiccicata(L,[],L).
+
+appiccicata([H|T1], L2, [H|T]):-
+    appiccicata(T1, L2, T).
+
 /*quicksort*/
 quick_sorted([],[]).
 
