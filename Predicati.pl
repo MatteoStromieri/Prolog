@@ -26,6 +26,10 @@ appiccicata(L,[],L).
 
 appiccicata([H|T1], L2, [H|T]):-
     appiccicata(T1, L2, T).
+    
+appartiene(X, [X|_]).
+appartiene(X, [_|L]):-
+    appartiene(X, L).
 
 /*quicksort*/
 quick_sorted([],[]).
