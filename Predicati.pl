@@ -1,3 +1,28 @@
+merge_sorted([T],[T]).
+merge_sorted([],[]).
+merge_sorted(L, LISTA_ORDINATA):-
+    length(L,N),
+    H1 is N//2,
+    H2 is N - H1,
+    length(LISTA_SX, H1),
+    length(LISTA_DX, H2),
+    append(LISTA_SX, LISTA_DX, L),
+    merge_sorted(LISTA_SX, LISTA_SX_ORDINATA),
+    merge_sorted(LISTA_DX, LISTA_DX_ORDINATA),
+    merged(LISTA_SX_ORDINATA, LISTA_DX_ORDINATA, LISTA_ORDINATA),!.
+
+merged([],[],[]).
+merged([],L,L).
+merged(L,[],L).
+merged([H1|T1],[H2|T2],[H1|T]):-
+      H1 < H2,
+      merged(T1,[H2|T2],T).
+merged([H1|T1],[H2|T2],[H2|T]):-
+      H1 >= H2,
+      merged([H1|T1],T2,T).
+
+
+
 /*lezione 10 06-04*/
 
 genitore(mario, dario).
