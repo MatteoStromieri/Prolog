@@ -20,6 +20,36 @@ merged([H1|T1],[H2|T2],[H1|T]):-
 merged([H1|T1],[H2|T2],[H2|T]):-
       H1 >= H2,
       merged([H1|T1],T2,T).
+%--------------------------------------------------------------------
+
+doubled([],[]).
+doubled([H|T],[H,H|L]):-
+   double(T,L). 
+
+%data una lista di liste, spacchetta tutto [[1,2,3],4,[5]] -> [1,2,3,4,5]
+
+unpacked([],[]).
+unpacked([H|T],L):-
+    is_list(H),
+    unpacked(H,L1),
+    unpacked(T,L2),
+    append(L1,L2,L),
+    !.
+unpacked([H|T],[H|TL]):-
+    unpacked(T,TL),!.
+
+%Example:
+% compress([a,a,a,a,b,c,c,a,a,d,e,e,e,e],X).
+%X = [a,b,c,a,d,e]
+
+compress([],[]).
+compress([H|T],L):-
+   member(H,T),
+   compress(T,L),!.
+compress([H|T],[H|L]):-
+    compress(T,L),!.
+
+%--------------------------------------------------------------------
 
 
 
