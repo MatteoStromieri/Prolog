@@ -1,3 +1,41 @@
+%returns the first N elements of L
+first_n(L,N,LN):-
+    append(LN,_,L),
+    length(LN,N).
+
+%rotates L
+rotateRight(L,[A|LN]):-
+    length(L,N),
+    N1 is N - 1,
+    first_n(L,N1,LN),
+    last_elem(L,A),!.
+
+%returns the last element of a list
+last_elem([X|[]],X).
+last_elem([_|T],X):-
+    last_elem(T,X).
+
+%returns the last element of a list and deletes it
+pop_last([E], [], E).
+pop_last([H|T], [H|L], E):-
+    pop_last(T, L, E).
+
+%retate a list N times
+rotateRightN(L,0,L).
+rotateRightN(L,N,L2):-
+    var(L2),
+    rotateRight(L,L3),
+    N1 is N - 1,
+    rotateRightN(L3,N1,L2),
+    !.
+rotateRightN(L,N,L2):-
+    var(L),
+    N1 is N - 1,
+    rotateRightN(L3,N1,L2),
+    rotateRight(L,L3),
+    !.
+    
+
 merge_sorted([T],[T]).
 merge_sorted([],[]).
 merge_sorted(L, LISTA_ORDINATA):-
