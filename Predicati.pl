@@ -26,7 +26,8 @@ isAnagramma(levirato,rilevato).
 isAnagramma(levirato,rivelato).
 
 anagrammed(Parola,ListaAnagrammiParola):-
-    setof(X,C^isAnagramma(Parola,X),ListaAnagrammiParola).
+    setof(X,isAnagramma(Parola,X),ListaAnagrammiParola).
+
 %returns the first N elements of L
 first_n(L,N,LN):-
     append(LN,_,L),
