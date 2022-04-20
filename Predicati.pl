@@ -1,3 +1,19 @@
+%vero se
+%Lista è una lista di caratteri
+%N è un numero intero positivo
+%Sottolista è la sottolista di N caratteri contigui in Lista
+sottolistadiNElementiContigui(Lista,Sottolista,N):-
+    length(Sottolista,N),
+    append(L2,_,Lista),
+    append(_,Sottolista,L2).
+
+%Lista è una lista di caratteri
+%N è un numero intero positivo
+%Sottoliste è la lista di sottoliste di N caratteri contigui di Lista
+
+sottolistediNElementiContigui(Lista,Sottoliste,N):-
+    setof(L,N^sottolistadiNElementiContigui(Lista,L,N),Sottoliste).
+
 %Si vuole definire un predicatogruppiDiLettereUguali(Lista,ListaLettereMultiple)
 %che sia vero se Lista è una lista dicaratteri 
 %ListaLettereMultiple è la lista di caratteri che sono ripetuti in Lista
