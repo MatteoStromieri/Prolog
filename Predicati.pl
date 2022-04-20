@@ -1,3 +1,32 @@
+%Si vuole definire un predicatogruppiDiLettereUguali(Lista,ListaLettereMultiple)
+%che sia vero se Lista è una lista dicaratteri 
+%ListaLettereMultiple è la lista di caratteri che sono ripetuti in Lista
+
+lettereRipetute([],[]).
+lettereRipetute([H|T],[H|S]):-
+    member(H,T),
+    lettereRipetute(T,S),
+    \+ member(H,S),
+    !.
+
+%predicato che definisce una lista con senza le ripetizioni
+
+predicatogruppiDiLettereUguali([],[]).    
+predicatogruppiDiLettereUguali([H|T],[H|L]):-
+    \+ member(H,T),
+    predicatogruppiDiLettereUguali(T,L),
+    !.
+predicatogruppiDiLettereUguali([_|T],L):-
+    predicatogruppiDiLettereUguali(T,L).
+
+%Anagrammi
+isAnagramma(levirato,livreato).
+isAnagramma(levirato,relativo).
+isAnagramma(levirato,rilevato).
+isAnagramma(levirato,rivelato).
+
+anagrammed(Parola,ListaAnagrammiParola):-
+    setof(X,C^isAnagramma(Parola,X),ListaAnagrammiParola).
 %returns the first N elements of L
 first_n(L,N,LN):-
     append(LN,_,L),
