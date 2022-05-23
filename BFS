@@ -1,0 +1,33 @@
+e(a,g).
+e(b,a).
+e(g,c).
+e(g,f).
+e(c,b).
+e(c,d).
+e(f,e).
+e(d,e).
+
+
+reachable_paths([H|T],PATHS):-
+	setof([X,H|T], e(H,X), PATHS).
+
+
+expanded_frontier([],[]).
+expanded_frontier([P|RP],PATHS):-
+	reachable_paths(P,P_PATHS),
+	expanded_frontier(RP,R_PATHS),
+	append(P_PATHS,R_PATHS,PATHS).
+
+expanded_frontier_paths(P1,P2):-
+	expanded_frontier(P1,P2).
+
+expanded_frontier_paths(P1,P2):-
+	expanded_frontier(P1,P3),
+	expanded_frontier_paths(P3,P2).
+
+pathBFS(X,Y,[Y|R]):-
+    expanded_frontier_paths([[X]],P),
+    write(P),nl,
+    member([Y|R],P).
+
+% pathBFS(a, e, P)
