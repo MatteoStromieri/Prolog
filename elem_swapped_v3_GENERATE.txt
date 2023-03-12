@@ -1,0 +1,27 @@
+% elem_swapped(L1, L2, Dist): true if L2 is L1 with two elements swapped at distance Dist
+% CAN GENERATE LISTS WITH GIVEN DIST
+
+elem_swapped([H|T1], [H|T2], Dist):-
+    elem_swapped(T1, T2, Dist).
+
+elem_swapped([H1|T1], [H2|T2], Dist):-
+    permutation([H1|T1], [H2|T2]),
+    H1 \= H2,
+    firstn(T1, DistMinus1, MiddleList),
+    append(MiddleList, [H1], MiddleListPlusH1),
+    append(MiddleListPlusH1, _, T2),
+    Dist is DistMinus1 + 1.
+    
+    
+firstn(L, N, L1):-
+    append(L1, _, L),
+    length(L1, N).
+
+permutation([], []).
+permutation([X|T], LP):-
+    permutation(T, LPwithoutX),
+    without(X, LP, LPwithoutX).
+    
+without(X, [X|T], T).
+without(X, [Y|TY], [Y|T]):-
+    without(X, TY, T).

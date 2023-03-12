@@ -1,0 +1,44 @@
+/*Compress consecutive duplicates*/
+pack([], []).
+pack([X], [X]).
+
+%caso due elementi uguali
+pack([H,H|T], LP):-
+    !,
+    \+ is_list(H),
+    append([H], [H], HP),
+    append([HP], T, LX),
+    pack(LX, LP).
+
+%caso due elementi diversi
+pack([H1,H2|T], LP):-
+    \+ is_list(H1),
+    append([H1], L2P, LP),
+    pack([H2|T], L2P).
+    
+
+%caso una lista e un elemento che appartiene 
+pack([H1,H2|T], LP):-
+    is_list(H1),
+    \+ is_list(H2),
+    member(H2, H1),
+    append(H1, [H2], HP),
+    append([HP], T, LX),
+    pack(LX, LP).
+
+%caso una lista e un elemento che non appartiene
+pack([H1, H2|T], LP):-
+    is_list(H1),
+    \+ is_list(H2),
+    \+ member(H2, H1),
+    append([H1], L2P, LP),
+    pack([H2|T], L2P).
+
+
+%caso due liste eterogenee
+pack([H1, H2|T], LP):-
+    is_list(H1),
+    is_list(H2),
+    append([H1], [H2|L2P], LP),
+    pack([H2|T], L2P).
+    

@@ -1,0 +1,68 @@
+distanza_stringhe(String, String, [nulla], 0).
+distanza_stringhe(String1, String2, Mossa, Costo):- 
+    mossa(String1, String2, Mossa, Costo), !.
+
+distanza_stringhe(String1, String2, [Mossa|RestMosse], CostoTot):-
+    mossa(String1, StringIntermedio, Mossa, Costo),
+    distanza_stringhe(StringIntermedio, String2, RestMosse, CostoRest),
+    %problem: StringIntermedio goes into loop because there's no limit to its length
+    CostoTot is Costo + CostoRest.
+    
+
+mossa(String1, String2, [inversione, IX, IY, X, Y], Cost):-
+    elem_swapped(String1, String2, IX, IY, X, Y, Dist),
+    Cost is 1 + Dist.
+
+mossa(String1, String2, [cancellazione, X], 5):-
+    without(X, String1, String2).
+
+mossa(String1, String2, [inserimento, X], 5):-
+	is_plus(String1, X, String2).
+
+
+
+% is_plus(L1, X, L2): true if L1 plus X somewhere is L2
+is_plus(L1, X, L2):-
+    without(X, L2, L1).
+    
+%without(Elem, List, ListOut): true if by removing Elem from List we get ListOut
+without(X, [X|T], T):-!.
+without(X, [Y|TY], [Y|T]):-
+    without(X, TY, T).
+    
+
+% elem_swapped(L1, L2, Index1, Index2, Elem1, Elem2, Distanca): true if L2 is L1 with Elem1 and Elem2 swapped at index Index1 and Index2 at distance Distance
+elem_swapped([X], [X], 1, 1, X, X, 0).
+elem_swapped(L1, L2, Elem1, Elem2, Index1, Index2, Dist):-
+    length(L1, Len),
+    length(L2, Len),
+    count_diff_with_indexes(L1, L2, 2, [Index1, Index2], 1), % there must be difference of 2
+   
+    %ToDo: L2 is L1 with elements at indexes I1 and I2 swapped
+    kth_elem(Index1, L1, Elem1),
+    kth_elem(Index2, L2, Elem1), % element at Index1 in L1 is the same as the element at Index2 in L2
+   
+    kth_elem(Index2, L1, Elem2),
+    kth_elem(Index1, L2, Elem2),
+    Dist is abs(Index1 - Index2).
+   
+%count_diff_with_indexes([L1, L2, Count, Indexes, 1): true if L1 and L2 have difference in Count elements and the differing elements are at indexes in "Indexes"
+
+count_diff_with_indexes([], [], 0, [], _).
+count_diff_with_indexes([H|T1], [H|T2], Count, Indexes, CurrentIndex):-
+    CurrentIndexPlus1 is CurrentIndex + 1,
+    count_diff_with_indexes(T1, T2, Count, Indexes, CurrentIndexPlus1).
+count_diff_with_indexes([X|T1], [Y|T2], Count, [CurrentIndex|RestIndexes], CurrentIndex):-
+    X \= Y,
+    CurrentIndexPlus1 is CurrentIndex + 1,
+    count_diff_with_indexes(T1, T2, CountMinus1, RestIndexes, CurrentIndexPlus1),
+    Count is CountMinus1 + 1.
+
+/* kth(K, L, X) restituisce true se il k-esimo elemento di L è X*/
+kth_elem(-1, [], _).
+kth_elem(1, [X|_], X).
+kth_elem(K, [_|L], X):-
+    !,
+    kth_elem(M, L, X),
+    K is M + 1,
+    K > 1.

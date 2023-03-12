@@ -1,0 +1,11 @@
+% list_min_couple(LIST, MIN_COUPLE): true if MIN_COUPLE is the couple with the minimum key in LIST
+
+list_min_couple([MIN_COUPLE], MIN_COUPLE).
+
+list_min_couple([[K1, V1], [K2,_]|T], MIN_COUPLE):-
+    K1 =< K2,
+    list_min_couple([[K1, V1]|T], MIN_COUPLE).
+
+list_min_couple([[K1, _], [K2, V2]|T], MIN):-
+    K1 > K2,		
+    list_min_couple([[K2, V2]|T], MIN).

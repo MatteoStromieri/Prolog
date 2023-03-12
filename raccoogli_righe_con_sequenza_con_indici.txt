@@ -1,0 +1,66 @@
+% raccogli_righe_con_sequenza(ListaListe, A, N, Init, Raccolta): true se Raccolta contiene tutte le liste in 
+ListaListe che hanno una sequenza di N volte A, per ogni lista raccolta si tiene l'indice della riga 
+
+
+quadratoInUnPianoFattoDi(A, LunghezzaLato, Piano):-
+    is_piano(Piano),
+    raccogli_righe_con_sequenza(Piano, A, LunghezzaLato, RigheConSeq),
+    ha_quadrato(RigheConSeq).
+
+ha_quadrato(RigheConSeq):-
+    
+    
+    
+    
+    
+    
+    
+
+
+% raccogli_righe_con_sequenza(ListaListe, A, N, Init, Raccolta): true se Raccolta contiene tutte le liste in ListaListe che hanno una sequenza di N volte A, per ogni lista raccolta si tiene l'indice della riga 
+raccogli_righe_con_sequenza([], _, _, _,[]).
+raccogli_righe_con_sequenza([R1|REST], A, Lung, Init, [(R1, IndexRiga, InitIndex)|AltreRigheDaAggiungere]):-
+    list_has_sequence(R1, A, Lung, InitIndex),
+    IndexRiga is Init,
+    InitPlus1 is Init + 1,
+    raccogli_righe_con_sequenza(REST, A, Lung, InitPlus1, AltreRigheDaAggiungere),
+    !.
+raccogli_righe_con_sequenza([R1|REST], A, Lung, Init, AltreRigheDaAggiungere):-
+    \+ list_has_sequence(R1, A, Lung, _),
+    InitPlus1 is Init + 1,
+    raccogli_righe_con_sequenza(REST, A, Lung, InitPlus1, AltreRigheDaAggiungere).
+    
+    
+
+list_has_sequence(L, X, N,INIT):-
+    make_list(X, N, LX),
+    subset_with_index(L, LX, 1, INIT).
+    
+make_list(_, 0, []).
+make_list(X, N, [X|T]):-
+    M is N - 1,
+    make_list(X, M, T),
+    !.
+    
+subset_with_index([], [], _, _).
+subset_with_index([H|Tail], [H|NTail], Init, Index):-
+    Index is Init,
+    subset_with_index(Tail, NTail, Init, Index).
+
+subset_with_index([_|Tail], NTail, Init, Index):-
+       InitPlus1 is Init + 1,
+       subset_with_index(Tail, NTail, InitPlus1, Index).    
+   	
+
+
+is_piano([R1, R2, R3, R4, R5, R6, R7, R8, R9, R10]):-
+    length(R1, 5),
+    length(R2, 5),
+    length(R3, 5),
+    length(R4, 5),
+    length(R5, 5),
+    length(R6, 5),
+    length(R7, 5),
+    length(R8, 5),
+    length(R9, 5),
+    length(R10, 5).

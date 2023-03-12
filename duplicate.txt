@@ -1,0 +1,34 @@
+% duplicate(L1, N, L2): true if L2 is L1 with each element N times
+
+%Ver1
+duplicate(L1,N,L2) :- 
+    duplicate(L1,N,L2,N).
+duplicate([],_,[],_).
+duplicate([_|Xs],N,Ys,0):- 
+    duplicate(Xs,N,Ys,N).
+duplicate([X|Xs],N,[X|Ys],K) :- 
+    K > 0, 
+    K1 is K - 1, 
+    duplicate([X|Xs],N,Ys,K1).
+
+
+
+
+%Ver2
+duplicate([], _, []).
+duplicate(L, 1, L).
+duplicate([H|T], N, LD):-
+    duplicate_elem(H, N, HD),
+    append(HD, TD, LD),
+    duplicate(T, N, TD).
+
+duplicate_elem(H, 1, [H]).
+duplicate_elem(_, 0, []).
+duplicate_elem(H, N, HD):-
+    duplicate_elem(H, M, HD1),
+    !,
+    N is M + 1,
+    append([H], HD1, HD).
+
+
+

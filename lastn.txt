@@ -1,0 +1,11 @@
+%lastn(L, N, Lastn): true if the last N elements of L are Lastn
+
+lastn(L, N, Lastn):-
+	reverse(L, LR),
+	firstn(LR, N, LastElems),
+	reverse(LastElems, Lastn).
+
+firstn(L, N, L1):-
+    append(L1, _, L),
+    length(L1, N).
+	

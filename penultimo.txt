@@ -1,0 +1,4 @@
+%last_but_one(X, L): true if X is the last but one element in L
+
+last_but_one(X,[X,_]).
+last_but_one(X,[_,Y|Ys]) :- last_but_one(X,[Y|Ys]).

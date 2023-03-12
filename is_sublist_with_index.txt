@@ -1,0 +1,6 @@
+%true if Sublist is inside List starting from index Index
+
+is_sublist_with_index( Sublist, List, Index) :-
+    append( [FirstPart, Sublist, _], List ),
+    length(FirstPart, LenFirstPart),
+    Index is LenFirstPart + 1.

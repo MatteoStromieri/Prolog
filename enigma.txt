@@ -1,0 +1,32 @@
+enigma([A,B,C,D,E,E,F,G,H,I]):-
+    list_to_num([A,B,C], ABC),
+    list_to_num([D,F], DF),
+    list_to_num([G,F,H], GFH),
+    GFH is ABC + DF,
+    
+    list_to_num([D,E], DE),
+    list_to_num([F,A], FA),
+    list_to_num([A,C,G], ACG),
+    ACG is DE * FA,
+    
+    list_to_num([G,D,G], GDG),
+    list_to_num([E], E),
+    list_to_num([I,A], IA),
+    IA is GDG / E,
+    
+    GDG is ABC + DE,
+    E is DF - FA,
+    IA is GFH - ACG.
+    
+    
+    
+list_to_num(List, N) :-
+    add_zero(List,Num),
+    name(N,Num).
+
+add_zero([X|Tail1],[Y|Tail2]) :-
+    !,
+    Y is X+48,
+    add_zero(Tail1,Tail2).
+add_zero([],[]) :-
+    !.

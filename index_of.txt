@@ -1,0 +1,10 @@
+%index_of(X, L, Index, 1): true if X is the Index-th element in L
+% only the first appearance from the left is returned
+
+index_of(_, [], _, _).
+index_of(X, [X|_], CurrentIndex, CurrentIndex).
+
+index_of(X, [Y|T], Index, CurrentIndex):-
+    X \= Y,
+    CurrentIndexPlus1 is CurrentIndex + 1,
+    index_of(X, T, Index, CurrentIndexPlus1).

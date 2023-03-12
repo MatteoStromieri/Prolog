@@ -1,0 +1,7 @@
+% make_duplicate_list(X, N, L): true if L is a list of N times X
+
+make_duplicate_list(_, 0, []).
+make_duplicate_list(X, N, [X|T]):-
+    M is N - 1,
+    make_duplicate_list(X, M, T),
+    !.

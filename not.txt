@@ -1,0 +1,5 @@
+my_not(P):-
+    P, !,
+    fail.
+
+my_not(_).

@@ -1,0 +1,34 @@
+%raccogli_righe_con_sequenza(ListaListe, X, N, Raccolta): true se Raccolta contiene tutte le liste di ListaListe con una sequenza di N volte X
+
+raccogli_righe_con_sequenza([], _, _, []).
+raccogli_righe_con_sequenza([R1|REST], A, Lung, [R1|AltreRigheDaAggiungere]):-
+    list_has_sequence(R1, A, Lung),
+    raccogli_righe_con_sequenza(REST, A, Lung, AltreRigheDaAggiungere),
+    !.
+raccogli_righe_con_sequenza([R1|REST], A, Lung, AltreRigheDaAggiungere):-
+    \+ list_has_sequence(R1, A, Lung),
+    raccogli_righe_con_sequenza(REST, A, Lung, AltreRigheDaAggiungere).
+
+
+
+
+
+
+list_has_sequence(L, X, N):-
+    make_list(X, N, LX),
+    subset_with_index(L, LX, 1, _).
+    
+make_list(_, 0, []).
+make_list(X, N, [X|T]):-
+    M is N - 1,
+    make_list(X, M, T),
+    !.
+    
+subset_with_index([], [], _, _).
+subset_with_index([H|Tail], [H|NTail], Init, Index):-
+    Index is Init,
+    subset_with_index(Tail, NTail, Init, Index).
+
+subset_with_index([_|Tail], NTail, Init, Index):-
+       InitPlus1 is Init + 1,
+       subset_with_index(Tail, NTail, InitPlus1, Index).    

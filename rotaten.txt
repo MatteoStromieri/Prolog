@@ -1,0 +1,14 @@
+%rotaten(L, N, LR): returns the list L rotated N places to the left
+rotaten([], _, []).
+rotaten(L, 0, L).
+
+rotaten(L, N, LR):- 
+    firstn(L, N, LX),
+    append(LY, LX, LR),
+    append(LX, LY, L),
+    !.
+    
+
+firstn(L, N, L1):-
+    append(L1, _, L),
+    length(L1, N).

@@ -1,0 +1,7 @@
+/*Flattens a list with nested lists or lists*/
+flatten_list(X, [X]):- \+ is_list(X).
+flatten_list([], []).
+flatten_list([H|L], LF):- 
+    flatten_list(H, L1),
+    flatten_list(L, L2),
+    append(L1, L2, LF).

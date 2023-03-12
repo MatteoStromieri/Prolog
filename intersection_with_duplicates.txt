@@ -1,0 +1,12 @@
+% intersection(L1, L2, Inters): true if Inters is the intersection between L1 and L2
+
+intersection([], _, []).
+
+intersection([H|T], List, [H|RestInt]):-
+    member(H,List),
+    intersection(T, List, RestInt),
+    !.
+
+intersection([_|T], List, Intersect):-
+    intersection(T, List, Intersect).
+    

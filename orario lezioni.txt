@@ -1,0 +1,76 @@
+Si deve preparare l’orario delle lezioni di un corso di laurea. L’orario deve
+essere organizzato su tre giorni e su due aule (Aula 1 e Aula 2). Ogni giorno
+un’aula può contenere al massimo 8 ore di lezione. Gli insegnamenti devono
+essere erogati per 4 ore totali e non si possono sovrapporre insegnamenti dello
+stesso anno accademico. Gli insegnamenti sono i seguenti:
+Insegnamento Anno di corso
+FIU I
+FIT I
+CS I
+BB I
+BU II
+CE II
+SI II
+OP II
+NNO III
+RE III
+Attraverso un predicato prolog, si producano gli orari possibili.
+
+
+
+% corso(materia, anno)
+corso(fiu, 1).
+corso(fit, 1).
+corso(cs, 1).
+corso(bb, 1).
+corso(ce, 2).
+corso(si, 2).
+corso(op, 2).
+corso(nno, 3).
+corso(re, 3).
+
+% suppongo che in Orario, le coppia di lezioni consecutive sono la prima per aula 1 e la seconda per aula 2
+orario(Orario, OreOccupate):-
+    setof((Materia, Anno), corso(Materia, Anno), ListaCorsiSingoli),
+    dupli(ListaCorsiSingoli, 4, ListaCorsi),
+    permutation(ListaCorsi, ListaCorsiPermutata),
+    riempi_orario(ListaCorsiPermutata, Orario),
+    length(Orario, OreOccupate).
+    %OreOccupate =< 48. 
+    
+% 48 perchè sono 2 aulee e ogni aula puo ospitare 8 ore di lezione al giorno
+% quindi sono 16 ore massimo al giorno in totale, sono 3 giorni, quindi 3 * 16 = 48.
+	
+
+riempi_orario([],[]).
+riempi_orario([(Mat, Anno)],[(Mat, Anno)]).
+riempi_orario([(Mat1, Anno1), (Mat2, Anno2)|RestCorsi], [(Mat1, Anno1), (Mat2, Anno2)|RestOrario]):-
+    Anno1 \= Anno2,
+    riempi_orario(RestCorsi, RestOrario).
+riempi_orario([(Mat1, Anno1), (Mat2, Anno2)|RestCorsi], [(Mat1, Anno1), (free)|RestOrario]):-
+    Anno1 == Anno2,
+    riempi_orario([(Mat2, Anno2)|RestCorsi], RestOrario).
+    
+
+% permutation(L1, L2): true if L1 and L2 have the same elements
+permutation([], []).
+permutation([X|T], LP):-
+    permutation(T, LPwithoutX),
+    without(X, LP, LPwithoutX).
+             
+without(X, [X|T], T).
+without(X, [Y|TY], [Y|T]):-
+    without(X, TY, T).
+    
+
+dupli(L1,N,L2) :- 
+    dupli(L1,N,L2,N).
+dupli([],_,[],_).
+dupli([_|Xs],N,Ys,0):- 
+    dupli(Xs,N,Ys,N).
+dupli([X|Xs],N,[X|Ys],K) :- 
+    K > 0, 
+    K1 is K - 1, 
+    dupli([X|Xs],N,Ys,K1).
+    
+% query: orario(O, Ore), se introduco il vincolo di non superare le ore, ci metterà tantissimo, quindi il vincolo l'ho commentato.

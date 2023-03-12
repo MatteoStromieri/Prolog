@@ -1,0 +1,7 @@
+%replace_couple(C1, C2, INDEX, LIST): true if X1, C1 replaces C2 (at index INDEX) and the output is LIST
+
+replace_couple([X1, X2], [_, _|T], 0, [X1, X2|T]).
+replace_couple([X1, X2], [Y1|T], INDEX, [Y1|TX]):-
+    INDEXMINUS1 is INDEX - 1,
+    replace_couple([X1, X2], T, INDEXMINUS1, TX).
+    

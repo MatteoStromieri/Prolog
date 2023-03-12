@@ -1,0 +1,20 @@
+% distance(L, X, Y, Dist): true if X and Y are Dist slots apart in L
+
+distance([X, Y], X, Y, 1).
+distance([Y, X], X, Y, 1).
+distance(L, X, Y, Dist):-
+    member(X, L),
+    member(Y, L),
+    index_of(X, L, IX, 1),
+    index_of(Y, L, IY, 1),
+    Dist is abs(IX - IY).
+    
+    
+%index_of(X, L, Index, 1): true if X is the Index-th element in L
+index_of(_, [], _, _).
+index_of(X, [X|_], CurrentIndex, CurrentIndex).
+
+index_of(X, [Y|T], Index, CurrentIndex):-
+    X \= Y,
+    CurrentIndexPlus1 is CurrentIndex + 1,
+    index_of(X, T, Index, CurrentIndexPlus1).

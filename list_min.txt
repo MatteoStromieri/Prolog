@@ -1,0 +1,12 @@
+% list_min(LIST, MIN): true if MIN is the minimum element in LIST
+
+
+list_min([X], X).
+
+list_min([H1, H2|T], MIN):-
+    H1 =< H2,
+    list_min([H1|T], MIN).
+
+list_min([H1, H2|T], MIN):-
+    H1 > H2,
+    list_min([H2|T], MIN).

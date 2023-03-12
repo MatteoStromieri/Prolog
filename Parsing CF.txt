@@ -1,0 +1,18 @@
+'A' --> 'B', 'C'.
+'B' --> 'C', 'D'.
+'B' --> ['b'].
+'C' --> ['c'].
+'D' --> ['d'].
+
+% query: 'A'(S, []) : returns all derivable strings from A
+
+
+/*
+  'B' --> 'C', 'D'. 
+	=
+  'B'(A, B) :-
+    'C'(A, C),
+    'D'(C, B).
+
+  'B'([b|A], A).
+*/

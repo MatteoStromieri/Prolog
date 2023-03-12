@@ -1,0 +1,28 @@
+% URL: https://drive.google.com/drive/u/0/folders/0BzzWryzUWNgkQWh5QnlxbUhSbGs?resourcekey=0-XlaUbVhiKdzAlHZF3VlbCg
+
+relation(gatto, il, mod).
+relation(mangia1, gatto, sog).
+relation(mangia1, cane, ogg).
+relation(cane, il, mod).
+relation(mangia1, mangia2, mod).
+relation(mangia2, mentre, mod).
+relation(mangia2, cane, sog).
+relation(mangia2, topo, ogg).
+relation(topo, il, mod).
+
+soggetto_verbo_oggetto(Verb, Sog, Ogg):-
+    bagof([Sog, Verb], relation(Verb, Sog, sog), L),
+    list_bagof(L, Phrases),
+    write(Phrases), nl,
+    member([[Sog, Verb, Ogg]], Phrases).
+    
+list_bagof([], []).
+list_bagof([[Sog, Verb]|T], [LOut1|RestL]):-
+    bagof([Sog, Verb, Ogg], relation(Verb, Ogg, ogg), LOut1),
+    list_bagof(T, RestL).
+    
+
+% query: 
+soggetto_verbo_oggetto(V, S, O)
+soggetto_verbo_oggetto(V, cane, O)
+soggetto_verbo_oggetto(V, S, topo)

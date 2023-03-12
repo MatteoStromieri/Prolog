@@ -1,0 +1,15 @@
+% SottolistaContigua(L, S, N): true se S è una sottolista di L lunga N
+sottolistaContigua(L, [H|S], N):-
+    eliminate_until(H, L, LNEW),
+    firstn(LNEW, M, S),
+    M is N - 1.
+
+% eliminate_until(Elem, List, ListOut): true if ListOut is List eliminating all elements until Elem
+eliminate_until(X,[X|L],L).
+eliminate_until(X,[_|L],R) :- 
+    eliminate_until(X,L,R).
+
+firstn(L, N, L1):-
+    append(L1, _, L),
+    length(L1, N).
+    

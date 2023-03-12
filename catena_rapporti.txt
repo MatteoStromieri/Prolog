@@ -1,0 +1,31 @@
+parente(luca, francesca).
+parente(francesca, massimiliano).
+parente(luca, anna).
+amico(luca, matteo).
+amico(matteo, orest).
+amico(luca, simone).
+amico(orest, thomas).
+collega(luca, marco).
+collega(thomas, patrick).
+
+
+
+%catena_conoscenza(P1, P2, Cat): true se Cat è la lista di rapporti che collega P1 e P2
+catena_conoscenza(P1, P2, [Rapporto]):-
+    rapporto_diretto(P1, P2, Rapporto).
+
+catena_conoscenza(P1, P2, [Rapporto|Catena]):-
+    rapporto_diretto(P1, PX, Rapporto),
+    catena_conoscenza(PX, P2, Catena).
+
+
+
+rapporto_diretto(P1, P2, Rapporto):-
+    parente(P1, P2),
+    Rapporto = parente.
+rapporto_diretto(P1, P2, Rapporto):-
+    amico(P1, P2),
+    Rapporto = amico.
+rapporto_diretto(P1, P2, Rapporto):-
+    collega(P1, P2),
+    Rapporto = collega.

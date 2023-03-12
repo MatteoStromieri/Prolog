@@ -1,0 +1,15 @@
+relation(gatto, il, mod).
+relation(mangia, gatto, sog).
+relation(mangia, cane, ogg).
+relation(cane, il, mod).
+relation(mangia, mangia, mod).
+relation(mangia, mentre, mod).
+relation(mangia, cane, sog).
+relation(mangia, topo, ogg).
+relation(topo, il, mod).
+
+soggetti_verbo(V, Ss):-
+    bagof(S, relation(V, S, sog), Ss).
+
+oggetti_verbo(V, Os):-
+    bagof(S, relation(V, S, ogg), Os).

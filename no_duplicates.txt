@@ -1,0 +1,16 @@
+% no_duplicates(L): true if L has no duplicates in it
+no_duplicates([_]).
+no_duplicates(L):-
+    unique_elements(L, L).
+
+
+
+% unique_elements(L, LU): true if LU has all elements of L but once for each
+unique_elements([], []).
+unique_elements([H|T], LO):-
+    member(H, T),
+    unique_elements(T, LO),
+    !.
+unique_elements([H|T], [H|LO]):-
+    not(member(H, T)),
+    unique_elements(T, LO).    

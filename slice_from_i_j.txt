@@ -1,0 +1,32 @@
+%slice_from(L, I, J, LS): returns the sublist of L from index I to J
+
+%Ver 1
+slice([X|_],1,1,[X]).
+slice([X|Xs],1,K,[X|Ys]) :- K > 1, 
+   K1 is K - 1, slice(Xs,1,K1,Ys).
+slice([_|Xs],I,K,Ys) :- I > 1, 
+   I1 is I - 1, K1 is K - 1, slice(Xs,I1,K1,Ys).
+
+
+%Ver2
+slice_from([], 0, 0, []):-
+    !.
+slice_from([], _, _, _):- 
+    !,
+    fail.
+slice_from([H|_], 0, 0, H).
+
+slice_from([_|T], I, J, LS):-
+    I \= 0,
+    I1 is I - 1,
+    J1 is J - 1,
+    slice_from(T, I1, J1, LS).
+
+slice_from(L, 0, J, LS):-
+    firstn(L, J, LS).
+    
+
+%firstn(L, N, L1): true if L1 is a list containing the first N elements of L
+firstn(L, N, L1):-
+    append(L1, _, L),
+    length(L1, N).

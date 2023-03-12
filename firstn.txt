@@ -1,0 +1,5 @@
+%first(L, N, L1): true if L1 is the sublist of the first N elements in L
+
+firstn(L, N, L1):-
+    append(L1, _, L),
+    length(L1, N).

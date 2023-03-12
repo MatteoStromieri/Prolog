@@ -1,0 +1,13 @@
+%combinations(N, L, LO): returns all possible combinations of N distinct elements in L
+
+combination(0,_,[]).
+combination(K,L,[H|T]) :- 
+   K > 0,
+   eliminate_until(H,L,R),
+   Kminus1 is K-1, 
+   combination(Kminus1,R,T).
+
+% eliminate_until(Elem, List, ListOut): true if ListOut is List eliminating all elements until Elem
+eliminate_until(X,[X|L],L).
+eliminate_until(X,[_|L],R) :- 
+    eliminate_until(X,L,R).

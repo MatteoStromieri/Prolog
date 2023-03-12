@@ -1,0 +1,24 @@
+%Ver1
+list_to_num(List, N) :-
+    add_zero(List,Num),
+    name(N,Num).
+
+add_zero([X|Tail1],[Y|Tail2]) :-
+    !,
+    Y is X+48,
+    add_zero(Tail1,Tail2).
+add_zero([],[]) :-
+    !.
+
+
+
+
+%Ver2
+l_to_n(L, N) :-
+    reverse(L ,P),
+    list_to_n(P,0,N).
+list_to_n([H|T], C, N) :-
+    C1 is C + 1,
+    list_to_n(T, C1, P),
+    N is H*(10**C) + P.
+list_to_n([], _,0).

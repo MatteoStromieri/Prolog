@@ -1,0 +1,41 @@
+/* Tree Structure
+ * t(1,[
+ 		t(2,[
+          	t(2,[]),
+            t(1,[]),
+            t(4,[])
+          ]),
+		t(3,[
+          	t(4,[
+                t(1,[]),
+                t(3,[])
+                ]),
+         	 t(5,[])])
+     ]).
+*/
+
+% Un sottoalbero di un nodo è anche il nodo stesso
+sottoalbero_r(t(A,_),t(A,[])).
+
+sottoalbero_r(t(A,LF),t(A,LFF)):-
+    \+ LF == [], % A non è foglia
+    sottoalberi_r(LF,LFF). % sottoalberi sono i sottoalberi dei figli
+
+sottoalberi_r([],[]).
+sottoalberi_r([A|LF],[SA|LFF]):-
+    sottoalbero_r(A,SA), %SA è sottoalbero di A che parte dalla radice
+	sottoalberi_r(LF,LFF). % LFF sono i sottoalberi che partono dalla radice di degli altri figli 
+
+
+%PUNTO PER IL CONTROLLO DELL'ORDINE NELLA
+%GENERAZIONE DELLE SOLUZIONI DEI SOTTOALBERI
+sottoalbero(t(_,FS),TS):- %TS è sottoalbero di uno dei figli
+    member(T,FS),
+    sottoalbero_r(T,TS).
+
+sottoalbero(T,TS):- % TS è un sottoalbero che parte dalla radice
+    sottoalbero_r(T,TS).
+
+
+sottoalberi(T,TSS):-
+    setof(TS, sottoalbero(T,TS), TSS).

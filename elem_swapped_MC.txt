@@ -1,0 +1,19 @@
+equals(L,L).
+
+swapped(L1,L2, D):-
+    append(L1s, L1d, L1),
+    append(L2s, L2d, L2),
+    equals(L1s, L2s),
+
+    append([A], L1m, L1d),
+    append([B], L2m, L2d),
+
+    append(L1ms, L1md, L1m),
+    append(L2ms, L2md, L2m),
+    equals(L1ms, L2ms),
+
+    append([B], L1bb, L1md),
+    append([A], L2bb, L2md),
+    equals(L1bb, L2bb),
+
+    length(L1ms, D).

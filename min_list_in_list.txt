@@ -1,0 +1,12 @@
+% min_list_in_list(LList, MinList): true if MinList is the minimum list in LList
+
+min_list_in_list(LList, MinList):-
+    member(MinList, LList),
+    length(MinList, MinLen),
+    is_min_len(MinLen, LList).
+
+is_min_len(_, []).
+is_min_len(MinLen, [L1|RestLists]):-
+    length(L1, Len1),
+    MinLen =< Len1,
+    is_min_len(MinLen, RestLists).

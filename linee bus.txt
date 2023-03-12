@@ -1,0 +1,109 @@
+%tratta(Stazione1, Stazione2, Distanza, Tipologia, ClasseMezzi)
+tratta(roma,firenze,200,nazionale_blu, normale).  
+tratta(roma,firenze,200,nazionale_blu, comfort).  
+tratta(roma,firenze,200,nazionale_blu, deluxe).  
+tratta(roma,firenze,200,nazionale_grigio, normale).  
+tratta(roma,firenze,200,nazionale_grigio, comfort).  
+tratta(roma,firenze,200,nazionale_grigio, deluxe).  
+
+tratta(roma,pisa,220,nazionale_blu, normale).
+tratta(roma,pisa,220,nazionale_blu, comfort).
+
+tratta(firenze,pisa,50,regionale_blu, comfort).
+tratta(firenze,pisa,50,regionale_blu, deluxe).
+
+tratta(firenze,bologna,60,regionale_blu, normale).  
+tratta(firenze,bologna,60,regionale_blu, comfort).  
+tratta(firenze,bologna,60,regionale_blu, deluxe).  
+tratta(firenze,bologna,60,nazionale_blu, normale).  
+tratta(firenze,bologna,60,nazionale_blu, comfort).  
+tratta(firenze,bologna,60,nazionale_blu, deluxe).  
+
+tratta(roma,ancona,200,regionale_blu, normale).
+tratta(roma,ancona,200,regionale_grigio, normale).
+
+tratta(roma,pescara,150,regionale_blu, normale).
+tratta(roma,pescara,150,regionale_grigio, normale).
+
+tratta(roma,napoli,170,nazionale_blu,normale).
+
+tratta(napoli, foggia,80,regionale_blu, normale).
+tratta(napoli, foggia,80,regionale_blu, comfort).
+tratta(napoli, foggia,80,regionale_grigio, normale).
+tratta(napoli, foggia,80,regionale_grigio, comfort).
+
+tratta(foggia,pescara,100,regionale_blu,normale).
+tratta(foggia, losAngeles, 10000, regionale_blu, deluxe).
+
+
+
+%costoPerKm(Tipologia, Costo)
+costoPerKm(nazionale_blu, 0.15).
+costoPerKm(nazionale_grigio, 0.10).
+costoPerKm(regionale_blu, 0.10).
+costoPerKm(regionale_grigio, 0.08).
+
+
+%coefMoltiplicativo(ClasseMezzi, Coef)
+coefMoltiplicativo(normale, 1).
+coefMoltiplicativo(comfort, 1.3).
+coefMoltiplicativo(deluxe, 1.7).
+
+
+
+tratta_set_costo([P, D, Km, Tipologia, Classe, _], [P,D,Km,Tipologia,Classe,Costo]):-
+    costoPerKm(Tipologia, C),
+    coefMoltiplicativo(Classe, Coef),
+    Costo is Km * C * Coef.
+
+
+transizione([P,D,_,_,_,_], TrattaWithCost):-
+    setof([P,D,Km,Tipologia,Classe, 0], tratta(P,D,Km,Tipologia,Classe), Tratte_withoutCost),
+    member(Tratta, Tratte_withoutCost),
+    tratta_set_costo(Tratta, TrattaWithCost).
+
+transizioni([DestinazioneFinale,_,_,_,_,_], DestinazioneFinale, []):- !.
+transizioni([P,D1,Km1,Tipologia1,Classe1,Cost1], DestinazioneFinale, [[P,D,Km,Tipologia,Classe,Cost]|RestTrans]):-
+    transizione([P,D1,Km1,Tipologia1,Classe1, Cost1], [P,D,Km,Tipologia,Classe,Cost]),
+    transizioni([D,_,_,_,_,_], DestinazioneFinale, RestTrans).
+
+
+proposte_biglietti(Partenza, Destinazione, Proposte):-
+    setof(Seq, transizioni([Partenza, _, _, _, _, _], Destinazione, Seq), Proposte).
+
+
+biglietto_migliore(Partenza, Destinazione, BigliettoMigliore):-
+    proposte_biglietti(Partenza, Destinazione, Proposte),
+    associa_costo_accumulativo(Proposte, ProposteConCosti),
+    get_min_viaggio(ProposteConCosti, BigliettoMigliore).
+
+
+associa_costo_accumulativo([], []).
+associa_costo_accumulativo([Proposta1|RestProposte], [[Costo1|Proposta1]|RestProposteConCosti]):-
+    somma_costi(Proposta1, Costo1),
+    associa_costo_accumulativo(RestProposte, RestProposteConCosti).
+
+
+somma_costi([[_, _, _, _, _, C]], C).
+somma_costi([[_, _, _, _, _, C1]|RestTratti], Cost):-
+    somma_costi(RestTratti, RestCost),
+    Cost is C1 + RestCost.
+
+
+get_min_viaggio([[Cost1|_], [Cost2|Rest2]], [Cost2|Rest2]):-
+    Cost1 >= Cost2, !.
+get_min_viaggio([[Cost1|Rest1], [Cost2|_]], [Cost1|Rest1]):-
+    Cost1 < Cost2, !.
+
+get_min_viaggio([[Cost1|_], [Cost2|Rest2]|RestProposte], BigliettoMigliore):-
+    Cost1 >= Cost2,
+    get_min_viaggio([[Cost2|Rest2]|RestProposte], BigliettoMigliore).
+get_min_viaggio([[Cost1|Rest1], [Cost2|_]|RestProposte], BigliettoMigliore):-
+    Cost1 < Cost2,
+    get_min_viaggio([[Cost1|Rest1]|RestProposte], BigliettoMigliore).
+
+
+
+% query: transizioni([roma, _, _,_,_,_],losAngeles,P) %opzioni per raggiungere losAngeles da Roma
+% query: proposte_biglietti(roma, losAngeles, B) %tutte le opzioni per andare da roma a losAngeles
+% query: biglietto_migliore(roma, losAngeles, B) % l'opzione cheapes per andare da roma a losAngeles

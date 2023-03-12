@@ -1,0 +1,18 @@
+palindroma([]).
+palindroma(L):-
+    uguali(L, LR),
+    rivoltata(L, LR).
+
+uguali([], []).
+uguali([H|T1], [H|T2]):-
+    uguali(T1, T2).
+
+rivoltata([],[]).
+rivoltata([H|T], LR):-
+    appiccicata(TR, [H], LR),
+    rivoltata(T, TR).
+
+appiccicata(L1, [], L1).
+appiccicata([], L2, L2).
+appiccicata([H|T1], L2, [H| T12]):-
+    appiccicata(T1, L2, T12).

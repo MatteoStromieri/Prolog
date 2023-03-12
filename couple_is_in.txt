@@ -1,0 +1,8 @@
+% couple_is_in(COUPLE, LIST, INDEX): true if COUPLE is in the LIST at index INDEX
+
+couple_is_in([X1, X2], [X1, X2|_], 0).
+couple_is_in([X1, X2], [X|T], J):-
+    X1 \= X,
+    couple_is_in([X1, X2], T, I),
+    J is I + 1.
+  

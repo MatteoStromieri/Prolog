@@ -1,0 +1,9 @@
+% drop_nth(L, N, LD). rimuove l'N-esimo elemento dalla Lista
+
+drop_nth([_|T], 0, T).
+
+drop_nth([H|T], N, LD):-
+    append([H], TD, LD),
+    drop_nth(T, M, TD),
+   	N is M + 1.
+    

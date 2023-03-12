@@ -1,0 +1,28 @@
+%count_diff([L1, L2, Count): true if L1 and L2 have difference in Count elements
+
+count_diff([], [], 0).
+count_diff([H|T1], [H|T2], Count):-
+    count_diff(T1, T2, Count).
+
+count_diff([X|T1], [Y|T2], Count):-
+    X \= Y,
+    count_diff(T1, T2, CountMinus1),
+    Count is CountMinus1 + 1.
+   
+
+
+
+
+%count_diff_with_indexes([L1, L2, Count, Indexes, 1): true if L1 and L2 have difference in Count elements and the differing elements are at indexes in "Indexes"
+
+count_diff_with_indexes([], [], 0, [], _).
+
+count_diff_with_indexes([H|T1], [H|T2], Count, Indexes, CurrentIndex):-
+    CurrentIndexPlus1 is CurrentIndex + 1,
+    count_diff_with_indexes(T1, T2, Count, Indexes, CurrentIndexPlus1).
+
+count_diff_with_indexes([X|T1], [Y|T2], Count, [CurrentIndex|RestIndexes], CurrentIndex):-
+    X \= Y,
+    CurrentIndexPlus1 is CurrentIndex + 1,
+    count_diff_with_indexes(T1, T2, CountMinus1, RestIndexes, CurrentIndexPlus1),
+    Count is CountMinus1 + 1.

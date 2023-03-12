@@ -1,0 +1,12 @@
+% is_divisible(N, D): returns true if N is divisible by D
+
+is_divisible(D, D):- !.
+
+is_divisible(N, D):-
+    !,
+    N > D,
+    M is N - D,
+    is_divisible(M, D).
+
+is_divisible(_, _):-
+    fail.

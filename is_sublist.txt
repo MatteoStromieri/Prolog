@@ -1,0 +1,4 @@
+% is_sublist(SL, L): true if SL is a sublist of L
+
+is_sublist( Sublist, List ) :-
+    append( [_, Sublist, _], List ).

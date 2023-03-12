@@ -1,0 +1,13 @@
+%replace_at(Elem, List, N, ListOut): replace the Nth element in List with Elem
+replace_at(X, L, N, LO):-
+    firstn(L, N, L1),
+    firstn(L1, M, L1R),
+    M is N - 1,
+    append(L1, A, L),
+    append(L1R, [X], L2),
+    append(L2, A, LO).
+    
+
+firstn(L, N, LO):-
+    append(LO, _, L),
+    length(LO, N).

@@ -1,0 +1,10 @@
+anagramma([p,r,e,c,i,s,a], [s,c,i,a,r,p,e]).
+anagramma([p,r,e,c,i,s,a], [r,a,p,i,s,c,e]).
+anagramma([s,c,i,a,r,p,e], [p,r,e,c,i,s,a]).
+anagramma([s,c,i,a,r,p,e], [r,a,p,i,s,c,e]).
+anagramma([r,a,p,i,s,c,e], [s,c,i,a,r,p,e]).
+anagramma([r,a,p,i,s,c,e], [p,r,e,c,i,s,a]).
+
+% anagrammi(WORD, LIST): true se LIST contiene tutti gli anagrammi di WORD, definiti nei fatti
+anagrammi(WORD, LIST):-
+    setof(ANA, anagramma(WORD, ANA), LIST).

@@ -1,0 +1,25 @@
+%gruppiLettereRipetute(L, LR): true se LR contiene tutti i caratteri con duplicati in L
+
+gruppiLettereRipetute([], []).
+
+gruppiLettereRipetute([H|T], LO):-
+    member(H, T),
+    append([H], LX, LOX),
+    gruppiLettereRipetute(T, LX),
+    unique_elements(LOX, LO),
+    !.
+    
+gruppiLettereRipetute([H|T], LO):-
+    not(member(H, T)),
+    gruppiLettereRipetute(T, LO).
+    
+
+unique_elements([], []).
+unique_elements([H|T], LO):-
+    member(H, T),
+    unique_elements(T, LO).
+unique_elements([H|T], LO):-
+    not(member(H, T)),
+    unique_elements(T, LX),
+    append([H], LX, LO),
+    !.

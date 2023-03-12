@@ -1,0 +1,5 @@
+/* predicato last(L, X), restituisce true se X è l'ultimo elemento della lista L*/
+last([X], X).
+last([_|T], X):-
+    last(T, X).
+

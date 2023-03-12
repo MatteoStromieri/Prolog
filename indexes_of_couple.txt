@@ -1,0 +1,11 @@
+%indexes_of_couple(Couple, List, IndexesList, StartingIndex): true if IndexesList contains all the starting indexes of Couple inside List
+
+indexes_of_couple(_, [_], [], _).
+indexes_of_couple([X, Y], [X, Y|T], [CurrentCount|Rest], CurrentCount):-
+    CurrentCountPlus1 is CurrentCount + 1,
+    indexes_of_couple([X, Y], [Y|T], Rest, CurrentCountPlus1).
+
+indexes_of_couple([X, Y], [A, B|T], Rest, CurrentCount):-
+    [X, Y] \= [A, B],
+    CurrentCountPlus1 is CurrentCount + 1,
+    indexes_of_couple([X, Y], [B|T], Rest, CurrentCountPlus1).

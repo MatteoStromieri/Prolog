@@ -1,0 +1,7 @@
+% lista_vuota(L, REMAINING): true se L è una lista vuota lunga REMAINING
+
+lista_vuota(['_'|REST], REMAINING):-
+    REMAINING > 0,
+    REMAINING2 is REMAINING - 1,
+    lista_vuota(REST, REMAINING2).
+lista_vuota([], 0).

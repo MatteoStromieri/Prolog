@@ -1,0 +1,14 @@
+% two lists are compatible if their overlapping elements <= N
+compatible([], [], N):-
+    N > 0.
+
+compatible([SUBJ1|T1], [SUBJ2|T2], N):-
+    N > 0,
+    SUBJ1 = SUBJ2,
+    !,
+    M is N - 1,
+    compatible(T1, T2, M).
+
+compatible([_|T1], [_|T2], N):-
+    N > 0,
+    compatible(T1, T2, N).

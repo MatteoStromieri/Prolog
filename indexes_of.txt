@@ -1,0 +1,11 @@
+%indexes_of(Elem, List, IndexesList, StartingIndex): true if indexesList contains all the indexes of Elemn inside List, starting from StartingIndex (1)
+
+indexes_of(_, [], [], _).
+indexes_of(X, [X|T], [CurrentCount|Rest], CurrentCount):-
+    CurrentCountPlus1 is CurrentCount + 1,
+    indexes_of(X, T, Rest, CurrentCountPlus1).
+
+indexes_of(X, [Y|T], Rest, CurrentCount):-
+    X \= Y,
+    CurrentCountPlus1 is CurrentCount + 1,
+    indexes_of(X, T, Rest, CurrentCountPlus1).

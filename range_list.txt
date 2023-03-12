@@ -1,0 +1,6 @@
+%range_list(N1, N2, List): return List with number ranging from N1 to N2
+range_list(N2, N2, [N2]):- !.
+range_list(N1, N2, [N1|T]):-
+    N1plus1 is N1 + 1,
+    range_list(N1plus1, N2, T).
+

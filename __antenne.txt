@@ -1,0 +1,57 @@
+Dovete aiutare dei progettisti di reti cellulari e avete il potente linguaggio del prolog. I progettisti devono
+posizionare antenne su un territorio di modo da coprire con campo la maggior parte di esso. Le antenne sono di
+tipi differenti e generano campi elettromagnetici con forme differenti. Il campo da coprire è un quadrato 9x9. I
+progettisti hanno due tipi di antenne:
+1) Antenna Quadrato 3x3: l’antenna q è posizionata al centro del campo
+***
+*q*
+***
+2) Antenna Croce 3x3: l’antenna c è posizionata al centro del campo
+   *
+*c*
+   *
+
+
+antenna(123, q).
+antenna(456, q).
+antenna(789, c).
+antenna(000, c).
+
+is_posizione([X, Y]):-
+    X =< 9,
+    X >= 1,
+    Y =< 9,
+    Y >= 1.
+
+posizione((AntennaID, TipoAntenna), Mappa, [X, Y], Copertura):-
+    antenna(AntennaID, TipoAntenna),
+    is_posizione([X, Y]),
+    IndexAntenna is (X-1) * 9 + Y, % indice nell'array mappa
+    lista_vuota(MappaInit, 81),
+    mettiAntenna(IndexAntenna, TipoAntenna, MappaInit, Mappa),
+    calcola_copertura(IndexAntenna, TipoAntenna, Coperto),
+    Copertura is Coperto / 81 * 100.
+
+calcola_copertura(indexAntenna, q, 6):- % se sta sul bordo
+    member(indexAntenna, [2,3,4,5,6,7,8,10,18,19,27,28,36,37,45,46,54,55,63,64,72]).
+calcola_copertura(indexAntenna, q, 4):- %se sta in un angolo
+    member(indexAntenna, [1,9,73,81]).
+calcola_copertura(_, q, 9). % se sta interno
+calcola_copertura(indexAntenna, c, 4):- % se sta sul bordo
+    member(indexAntenna, [2,3,4,5,6,7,8,10,18,19,27,28,36,37,45,46,54,55,63,64,72]).
+calcola_copertura(indexAntenna, c, 3):- %se sta in un angolo
+    member(indexAntenna, [1,9,73,81]).
+calcola_copertura(_, c, 5). % se sta interno
+    
+
+mettiAntenna(1, TipoAntenna, [_|R], [TipoAntenna|R]).
+mettiAntenna(IndexAntenna, TipoAntenna, [H|REST1], [H|REST2]):-
+    IndexAntenna2 is IndexAntenna - 1,
+    mettiAntenna(IndexAntenna2, TipoAntenna, REST1, REST2).
+
+lista_vuota(['_'|REST], REMAINING):-
+    REMAINING > 0,
+    REMAINING2 is REMAINING - 1,
+    lista_vuota(REST, REMAINING2).
+lista_vuota([], 0).
+    

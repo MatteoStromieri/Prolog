@@ -1,0 +1,12 @@
+%insert_at(Elem, List, N, listOut): insert Elem in List as the Nth element
+insert_at(X, L, N, LO):-
+    firstn(L, N, L1),
+    append(L1, L2, L),
+    append(L1, [X], L1X),
+    append(L1X, L2, LO).
+    
+
+firstn(L, N, LO):-
+    append(LO, _, L),
+    length(LO, N).
+

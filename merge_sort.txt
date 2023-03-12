@@ -1,0 +1,24 @@
+mergesorted([], []).
+mergesorted([X], [X]).
+mergesorted(L, LO):-
+    split(L, L1, L2),
+    mergesorted(L1, LO1),
+    mergesorted(L2, LO2),
+    merged(LO1, LO2, LO).
+    
+
+merged([], X, X).
+merged(X, [], X).
+merged([H1|T1], [H2|T2], [H1|T]):-
+    H1 =< H2,
+    merged(T1, [H2|T2], T).
+
+merged([H1|T1], [H2|T2], [H2|T]):-
+    H1 > H2,
+    merged([H1|T1], T2, T).
+
+split([X], [X], []).
+split([], [], []).
+split([X,Y|T], [X|TX], [Y|TY]):-
+    split(T, TX, TY).
+    

@@ -1,0 +1,15 @@
+%distance(L, Elem1, Elem2, Dist): true if Elem1 and Elem2 are Dist slots apart in L
+% it considers only the first occurrences if there are duplicates
+
+distance([H|T], X, Y, Dist):-
+    H \= X,
+    distance(T, X, Y, Dist).
+distance([X|T], X, Y, Dist):-
+    kth_elem(Dist, T, Y).
+    
+    
+kth_elem(1, [X|_], X).
+kth_elem(K, [_|L], X):-
+    kth_elem(M, L, X),
+    K is M + 1,
+    K > 1.

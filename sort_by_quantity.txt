@@ -1,0 +1,32 @@
+% sort_by_quantity(L, LOUT): true se LOUT contiene coppie di (occorrenze, elemento) degli elementi di L in ordine decrescente di occorrenze
+
+
+sort_by_quantity([], []).
+sort_by_quantity(L, UniqueL):-
+    get_quantities(L, L, LQ),
+    unique_elements(LQ, Uniq),
+    sort(1, @>=, Uniq, UniqueL).
+
+
+get_quantities(_, [], []).
+get_quantities(L, [H|T], [(Oc,H)|REST]):-
+    occorrenze(H, L, Oc),
+    get_quantities(L, T, REST).
+
+
+unique_elements([], []).
+unique_elements([H|T], LO):-
+    member(H, T),
+    unique_elements(T, LO),
+    !.
+unique_elements([H|T], [H|LO]):-
+    not(member(H, T)),
+    unique_elements(T, LO).    
+    
+
+occorrenze(_, [], 0). 
+occorrenze(X, [X|T], N):- !,
+    occorrenze(X, T, M),
+    N is M + 1.
+occorrenze(X, [_|T], N):-
+    occorrenze(X, T, N).

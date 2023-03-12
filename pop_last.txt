@@ -1,0 +1,4 @@
+pop_last([E], [], E).
+
+pop_last([H|T], [H|L], E):-
+    pop_last(T, L, E).

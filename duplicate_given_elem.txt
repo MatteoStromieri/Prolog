@@ -1,0 +1,25 @@
+%duplicate_given_elem(List, Elem, N, ListOut). duplica N volte solo l'elemento Elem
+
+duplicate_given_elem([], _, _, []).
+duplicate_given_elem(L, _, 1, L).
+duplicate_given_elem(_, _, 0, _):-
+    fail.
+
+duplicate_given_elem(L, E, _, _):-
+    \+ member(E, L), !,
+    fail.
+
+duplicate_given_elem([E|T], E, N, LD):-
+    duplicate_elem(E, N, ED),
+    append(ED, T, LD).
+
+duplicate_given_elem([H|T], E, N, LD):-
+    append([H], TD, LD),
+    duplicate_given_elem(T, E, N, TD).
+
+duplicate_elem(H, 1, [H]).
+duplicate_elem(_, 0, []).
+duplicate_elem(H, N, HD):-
+    append([H], HD1, HD),
+    duplicate_elem(H, M, HD1),
+    N is M + 1.

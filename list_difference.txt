@@ -1,0 +1,19 @@
+% difference(L1, L2, Diff): true if Diff is the list containing elements of L1 that don't belong to L2
+
+% Version1
+difference([], _, []).
+difference([H|T1], L2, [H|D]):-
+    \+ member(H, L2),
+    difference(T1, L2, D).
+
+difference([H|T1], L2, D):-
+    member(H, L2),
+    difference(T1, L2, D).
+
+
+
+% Version 2
+difference(L,[],L).
+difference(L,[X|T],DIFF) :- 
+    select(X,L,L2),
+    sub(L2,T,DIFF).

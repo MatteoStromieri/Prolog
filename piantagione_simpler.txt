@@ -1,0 +1,147 @@
+In questo momento, è apparso evidente che occorre rendersi il più possibile autonomi dal punto di vista 
+della produzione di cibo. Per questo, si vuole costruire un sistema che riesca a suggerire la posizione 
+ottimale delle piante in un orto al fine di massimizzare la produzione. Nel caso specifico, si vuole fornire un
+sistema in grado di posizionare piante per ortaggi su piccoli terreni rettangolari che verranno divisi in 
+tasselli quadrati di dimensione fissata. 
+Si vogliono riempire tutti i tasselli di piante e sono state comprate tante piante per riempire tutti i tasselli. 
+Ad esempio, si ha a disposizione un terreno rettangolare 3m per 4m e che viene diviso in 12 tasselli 
+quadrati di 1 m^2 e un sacchetto di semi riempie solo un tassello. Sono stati comprati:
+2 sacchetti di certioli
+3 sacchetti di zucchine
+1 saccetto di cavolfiori
+3 sacchetti di spinaci
+3 sacchetti d patate
+La produzione di ogni tassello è 10kg nelle condizioni ottimali.
+Le condizioni non sono ottimali in queste situazioni:
+- Se due tasselli adiacenti hanno lo stesso ortaggio, la loro produzione scende di 1kg
+- Se le zucchine stanno vicino agli spinaci, la produzione di entrambi si riduce di 3kg
+- Se i cavolfiori stanno vicino agli spinaci, la produzione di entrambi si riduce di 2kg
+- Se le patate stanno vicino ai cavolfiori, la produzione di entrambi si riduce di 0,5kg
+- Se i cetrioli stanno vicino alle zucchine, la produzione si riduce di 5kg
+Si precisa che vicino e adiacente implica che abbiano un lato in comune.
+Quesito 
+Si vuole specificare un predicato prolog che consenta di trovare la disposizione ottimale, ovvero che 
+mantenga la produzione più alta.
+
+
+%
+orto(cetrioli).
+orto(cetrioli).
+orto(zucchine).
+orto(zucchine).
+orto(zucchine).
+orto(cavolfiori).
+orto(spinaci).
+orto(spinaci).
+orto(spinaci).
+orto(patate).
+orto(patate).
+orto(patate).
+
+produzione(PERM_DISP, PROD):-
+    disposizione(DISP),
+    permutation(DISP, PERM_DISP),
+    penalty(PERM_DISP, PENALTY),
+    PROD is 120 - PENALTY.
+
+% mi manca da prendere la PERM_DISP che minimizza PROD, basta usare setof su "produzione" e prendere la coppia che minimizza PROD con min_list_couple che sta in un altro file
+    
+
+penalty([R11, R12, R13, R14, R21, R22, R23, R24, R31, R32, R33, R34], PENALTY):- % calcola la detrazione
+    bagof(VICINO, vicini([R11, R12, R13, R14, R21, R22, R23, R24, R31, R32, R33, R34], cetrioli, VICINO), V_CET),
+    bagof(VICINO, vicini([R11, R12, R13, R14, R21, R22, R23, R24, R31, R32, R33, R34], zucchine, VICINO), V_ZUC),
+    bagof(VICINO, vicini([R11, R12, R13, R14, R21, R22, R23, R24, R31, R32, R33, R34], cavolfiori, VICINO), V_CAV),
+    bagof(VICINO, vicini([R11, R12, R13, R14, R21, R22, R23, R24, R31, R32, R33, R34], spinaci, VICINO), V_SPI),
+    bagof(VICINO, vicini([R11, R12, R13, R14, R21, R22, R23, R24, R31, R32, R33, R34], patate, VICINO), V_PAT),
+    
+    % stessi orti vicini
+    occorrenze(cetrioli, V_CET, PEN_CET),
+    occorrenze(zucchine, V_ZUC, PEN_ZUC),
+    occorrenze(cavolfiori, V_CAV, PEN_CAV),
+    occorrenze(spinaci, V_SPI, PEN_SPI),
+    occorrenze(patate, V_PAT, PEN_PAT),
+    PENALTY_STESSI_VICINI is PEN_CET + PEN_ZUC + PEN_CAV + PEN_SPI + PEN_PAT,
+    
+    % zucchine vicino spinaci
+    occorrenze(spinaci, V_ZUC, PEN_ZUC_SPI),
+    occorrenze(zucchine, V_SPI, PEN_SPI_ZUC),
+    PENALTY_ZUC_SPI is PEN_ZUC_SPI * 3 + PEN_SPI_ZUC * 3,
+    
+    % cavolfiori vicino spinaci
+    occorrenze(spinaci, V_CAV, PEN_CAV_SPI),
+    occorrenze(cavolfiori, V_SPI, PEN_SPI_CAV),
+    PENALTY_CAV_SPI is PEN_CAV_SPI * 2 + PEN_SPI_CAV * 2,
+    
+    % patate vicino cavolfiori
+    occorrenze(cavolfiori, V_PAT, PEN_PAT_CAV),
+    occorrenze(patate, V_CAV, PEN_CAV_PAT),
+    PENALTY_PAT_CAV is PEN_PAT_CAV * 0.5 + PEN_CAV_PAT * 0.5,
+    
+    % cetrioli vicino zucchine
+    occorrenze(zucchine, V_CET, PEN_CET_ZUC),
+    occorrenze(cetrioli, V_ZUC, PEN_ZUC_CET),
+    PENALTY_CET_ZUC is PEN_CET_ZUC * 5 + PEN_ZUC_CET * 5,
+    
+    PENALTY is  PENALTY_STESSI_VICINI + PENALTY_ZUC_SPI + PENALTY_CAV_SPI + PENALTY_PAT_CAV + PENALTY_CET_ZUC.
+    
+    
+
+% riga 1 
+vicini([R11, R12, _, _, _, _, _, _, _, _, _, _], R11, R12).
+vicini([R11, _, _, _, R21, _, _, _, _, _, _, _], R11, R21).
+vicini([R11, R12, _, _, _, _, _, _, _, _, _, _], R12, R11).
+vicini([_, R12, R13, _, _, _, _, _, _, _, _, _], R12, R13).
+vicini([_, R12, _, _, _, R22, _, _, _, _, _, _], R12, R22).
+vicini([_, R12, R13, _, _, _, _, _, _, _, _, _], R13, R12).
+vicini([_, _, R13, R14, _, _, _, _, _, _, _, _], R13, R14).
+vicini([_, _, R13, _, _, _, R23, _, _, _, _, _], R13, R23).
+vicini([_, _, R13, R14, _, _, _, _, _, _, _, _], R14, R13).
+vicini([_, _, _, R14, _, _, _, R24, _, _, _, _], R14, R24).
+
+%riga 2
+vicini([R11, _, _, _, R21, _, _, _, _, _, _, _], R21, R11).
+vicini([_, _, _, _, R21, R22, _, _, _, _, _, _], R21, R22).
+vicini([_, _, _, _, R21, _, _, _, R31, _, _, _], R21, R31).
+vicini([_, R12, _, _, _, R22, _, _, _, _, _, _], R22, R12).
+vicini([_, _, _, _, R21, R22, _, _, _, _, _, _], R22, R21).
+vicini([_, _, _, _, _, R22, R23, _, _, _, _, _], R22, R23).
+vicini([_, _, _, _, _, R22, _, _, _, R32, _, _], R22, R32).
+vicini([_, _, R13, _, _, _, R23, _, _, _, _, _], R23, R13).
+vicini([_, _, _, _, _, R22, R23, _, _, _, _, _], R23, R22).
+vicini([_, _, _, _, _, _, R23, R24, _, _, _, _], R23, R24).
+vicini([_, _, _, _, _, _, R23, _, _, _, R33, _], R23, R33).
+vicini([_, _, _, R14, _, _, _, R24, _, _, _, _], R24, R14).
+vicini([_, _, _, _, _, _, R23, R24, _, _, _, _], R24, R23).
+vicini([_, _, _, _, _, _, _, R24, _, _, _, R34], R24, R34).
+
+% riga 3 
+vicini([_, _, _, _, R21, _, _, _, R31, _, _, _], R31, R21).
+vicini([_, _, _, _, _, _, _, _, R31, R32, _, _], R31, R32).
+vicini([_, _, _, _, _, R22, _, _, _, R32, _, _], R32, R22).
+vicini([_, _, _, _, _, _, _, _, R31, R32, _, _], R32, R31).
+vicini([_, _, _, _, _, _, _, _, _, R32, R33, _], R32, R33).
+vicini([_, _, _, _, _, _, R23, _, _, _, R33, _], R33, R23).
+vicini([_, _, _, _, _, _, _, _, _, R32, R33, _], R33, R32).
+vicini([_, _, _, _, _, _, _, _, _, _, R33, R34], R33, R34).
+vicini([_, _, _, _, _, _, _, R24, _, _, _, R34], R34, R24).
+vicini([_, _, _, _, _, _, _, _, _, _, R33, R34], R34, R33).
+    
+
+occorrenze(_, [], 0).
+occorrenze(X, [X|T], N):- !,
+    occorrenze(X, T, M),
+    N is M + 1.
+occorrenze(X, [_|T], N):-
+    occorrenze(X, T, N).
+    
+permutation([], []).
+permutation([X|T], LP):-
+    permutation(T, LPwithoutX),
+    without(X, LP, LPwithoutX).
+            
+without(X, [X|T], T).
+without(X, [Y|TY], [Y|T]):-
+    without(X, TY, T).
+
+disposizione(L):-
+    findall(X, (orto(X)), L).

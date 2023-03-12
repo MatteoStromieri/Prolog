@@ -1,0 +1,25 @@
+parente(luca, francesca).
+amico(luca, massimiliano).
+amico(francesca, joe).
+parente(massimiliano, joe).
+collega(luca, joe).
+parente(luca, joe).
+
+
+
+%catena_conoscenza_migliore(P1, P2, Cat): true se Cat è la lista di persone con rapporti migliori che collega P1 e P2
+catena_conoscenza_migliore(P1, P2, [P2]):-
+    rapporto_diretto(P1, P2).
+
+catena_conoscenza_migliore(P1, P2, [PX|Catena]):-
+    rapporto_diretto(P1, PX),
+    catena_conoscenza_migliore(PX, P2, Catena).
+
+rapporto_diretto(P1, P2):-
+    !,
+    parente(P1, P2).
+rapporto_diretto(P1, P2):-
+    !,
+    amico(P1, P2).
+rapporto_diretto(P1, P2):-
+    collega(P1, P2).

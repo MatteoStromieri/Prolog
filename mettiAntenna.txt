@@ -1,0 +1,6 @@
+% mettiAntenna(Index, Elem, ListaIn, ListaOut): true se ListaOut è una copia di ListaIn con Elem in posizione Index
+
+mettiAntenna(1, TipoAntenna, [_|R], [TipoAntenna|R]).
+mettiAntenna(IndexAntenna, TipoAntenna, [H|REST1], [H|REST2]):-
+    IndexAntenna2 is IndexAntenna - 1,
+    mettiAntenna(IndexAntenna2, TipoAntenna, REST1, REST2).

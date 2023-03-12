@@ -1,0 +1,17 @@
+% Per semplicità, l'albero ha altezza 1, quindi subito foglie
+
+'E'(Ris) --> 'E1'(Ris1),'A','E1'(Ris2), {Ris is Ris1 + Ris2}.
+'E1'(Ris) --> 'E2'(Ris1),'M','E2'(Ris2), {Ris is Ris1 * Ris2}.
+'E1'(22) --> [22].
+'E1'(11) --> [11].
+'E1'(41) --> [41].
+'E2'(22) --> [22].
+'E2'(11) --> [11].
+'E2'(41) --> [41].
+'A' -->['+'].
+'M' -->['*'].
+
+Query: 
+'E'(Ris, [22, '+', 11], []).
+'E1'(Ris, [22, '*', 11], []).
+

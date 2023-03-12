@@ -1,0 +1,55 @@
+Un giornale vuole organizzare i suoi articoli nella pagina iniziale del suo sito web organizzando gli articoli in base
+alla loro importanza. Si definisce il concetto di importanza come un numero intero da 3 a 1 decrescente in base
+all’importanza. L’unità di base di misura della pagina è uno spazio quadrato di lato ub e la pagina è larga 5 ub e
+alta 10 ub.
+Si vogliono definire due versioni del predicato:
+homePage(PaginaRiempita,ListaArticoliConImportanza)
+che sia vero se PaginaRiempita rappresenta la pagina di 10 x 5 ub^2 , ListaArticoliConImportanza sia
+una lista di coppie (NomeArticolo,Importanza) e gli articoli occupino uno spazio che sia Importanza^2 ub^2.
+Possono rimanere spazi non assegnati (non unificati).
+
+
+
+----------------------------------------------------------------
+% ho organizzato la pagina come una lista da 10 x 5 = 50 celle.
+
+
+homePage(PaginaRiempita, ListaArticoliConImportanza):-
+    is_valid(ListaArticoliConImportanza), % controllo se la lista input è valida
+    crea_pagina(ListaArticoliConImportanza, PaginaInit), % creo una pagina con i soli articoli che appaiono un numero di volte corrispondende al quadrato dell'importanza
+    length(PaginaInit, LenPag), % ottengo la lunghezza della pagina attuale, cioè numero di celle occupate dagli articoli
+    LenPag =< 50, % il numero di articoli deve essere <= 50
+    Slack is 50 - LenPag, % Slack è il numero di "vuoto" da aggiungere per rendere la pagina lunga 50 celle
+    riempi_con_vuoto(PaginaInit, Slack, PaginaRiempita). % uso la lista di articoli e aggiungo in coda Slack volte "vuoto" per rendere la pagina lunga 50 celle
+   
+
+riempi_con_vuoto([], 0, []).
+riempi_con_vuoto([H|T], Slack, [H|RestPag]):-
+    riempi_con_vuoto(T, Slack, RestPag).
+riempi_con_vuoto([], Slack, [-|RestPag]):-
+    Slack > 0,
+    SlackMinus1 is Slack - 1,
+    riempi_con_vuoto([], SlackMinus1, RestPag).
+    
+
+crea_pagina([], []).
+crea_pagina([(A1, 1)|RestArticoli], Pag):-
+    append([A1], RestPag, Pag),
+    crea_pagina(RestArticoli, RestPag).
+
+crea_pagina([(A1, 2)|RestArticoli], Pag):-
+    append([A1, A1, A1, A1], RestPag, Pag),
+    crea_pagina(RestArticoli, RestPag).
+
+crea_pagina([(A1, 3)|RestArticoli], Pag):-
+    append([A1, A1, A1, A1, A1, A1, A1, A1, A1], RestPag, Pag),
+    crea_pagina(RestArticoli, RestPag).
+    
+
+is_valid([]).
+is_valid([(_, Prio)|REST]):-
+    Prio >= 1,
+    Prio =< 3,
+    is_valid(REST).
+
+%query: homePage(P, [(a1,3), (a2,3), (a3,3), (a4,2), (a5,2), (a6,2)])

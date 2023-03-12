@@ -1,0 +1,39 @@
+ins(fiu,1).
+ins(fit,1).
+ins(cs,1).
+ins(bb,1).
+ins(bu,2).
+ins(ce,2).
+ins(si,2).
+ins(op,2).
+ins(nno,3).
+ins(re,3).
+
+orario(ListaOrari):-
+    enlist(A),
+    split_list(A,A1,A2,A3),
+    append([A1],[A2],A12),
+    append(A12,[A3],ListaOrari).
+
+lista_insegnamenti(A):-
+    setof((X,Y),ins(X,Y),A).
+    
+split_list(A,A1,A2,A3):-
+    append(A1,A12,A),
+    length(A1,4), %dovrebbe essere 16
+    append(A2,A3,A12),
+    length(A2,4), %dovrebbe essere 16
+    length(A3,2). %dovrebbe essere 8
+
+verifica_coincidenze([]).
+verifica_coincidenze([(_,A),(_,B)|T]):-
+    \+ A == B,
+    verifica_coincidenze(T).
+
+enlist(L):-
+    lista_insegnamenti(A),
+    % A andrebbe moltiplicata per 4, perché ogni insegnamento può essere diviso in 4 ore
+    permutation(A,L),
+    verifica_coincidenze(L).
+
+%in ogni lista va letto che 2 elementi contigui sono in 2 aule separate, vengono svolte 4 ore di insegnamenti alla volta

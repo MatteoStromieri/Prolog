@@ -1,0 +1,7 @@
+/* kth(K, L, X) restituisce true se il k-esimo elemento di L è X*/
+
+kth_elem(1, [X|_], X).
+kth_elem(K, [_|L], X):-
+    kth_elem(M, L, X),
+    K is M + 1,
+    K > 1.

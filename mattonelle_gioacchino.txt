@@ -1,0 +1,56 @@
+mattonella(5,5).
+mattonella(10,10).
+mattonella(10,20).
+mattonella(5,10).
+
+pavimentazione_superficie(Lunghezza,Larghezza,Pavimentazione, NumeroMattonelleUtilizzate):-
+    Superficie is Lunghezza*Larghezza,
+    riempiSuperficie(Superficie,PavimentazioneMom),
+    rappresenta(PavimentazioneMom,Pavimentazione),
+    length(PavimentazioneMom,NumeroMattonelleUtilizzate).
+
+una_pavimentazione_superficie_ottima(Lunghezza,Larghezza,Pavimentazione):-
+    setof( [Pav,NM], pavimentazione_superficie(Lunghezza,Larghezza,Pav,NM), ListaPavimentazioni),
+    pavimentazioneOttima(ListaPavimentazioni,Pavimentazione).
+
+
+pavimentazioneOttima([[Pav,_]],Pav).
+pavimentazioneOttima([[Pav1,NM1],[_,NM2]|T],Pavimentazione):-
+    NM2 >= NM1,
+    pavimentazioneOttima([[Pav1,NM1]|T],Pavimentazione).
+pavimentazioneOttima([[_,NM1],[Pav2,NM2]|T],Pavimentazione):-
+    NM1 > NM2,
+    pavimentazioneOttima([[Pav2,NM2]|T],Pavimentazione).
+
+
+riempiSuperficie(0,[]).
+riempiSuperficie(Superficie,[mattonella(X,Y)|T]):-
+    Superficie > 0,
+    mattonella(X,Y),
+    DimMattonella is X*Y,
+    Superficie >= DimMattonella,
+    SuperficieRimanente is Superficie - DimMattonella,
+    riempiSuperficie(SuperficieRimanente,T).
+
+
+rappresenta([],[]).
+rappresenta([mattonella(X,Y)|T],[H1|T1]):-
+    listaDiListe(X,Y,H1,0),
+    rappresenta(T,T1).
+    
+    
+
+listaDiListe(_,Y,[],Y).
+listaDiListe(X,Y,[L1|T],Conto):-
+    \+ Conto == Y,
+    lista(X,L1,0),
+    Conto1 is Conto+1,
+    listaDiListe(X,Y,T,Conto1).
+
+lista(X,[],X).
+lista(X,[a|T],Conto):-
+    \+ Conto == X,
+    Conto1 is Conto+1,
+    lista(X,T,Conto1).
+
+    

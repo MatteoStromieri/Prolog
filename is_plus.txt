@@ -1,0 +1,12 @@
+% is_plus(L1, X, L2): true if L1 plus X somewhere is L2
+
+%is_plus([], X, [X]). maybe not needed
+
+is_plus(L1, X, L2):-
+    without(X, L2, L1).
+    
+%without(Elem, List, ListOut): true if by removing Elem from List we get ListOut
+without(X, [X|T], T):-!.
+without(X, [Y|TY], [Y|T]):-
+    without(X, TY, T).
+    

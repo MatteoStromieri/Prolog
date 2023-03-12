@@ -1,0 +1,37 @@
+/* somma */ 
+
+/* vediamo il numero nella lista delle sue cifre. */
+/* 124 --> [1,2,4] */
+/* meglio al contrario --> [4,2,1] */
+
+/* fatti che rappresentano la tabellina della somma */
+/* somma_cifre( cifra1, cifra2, riporto, risultato) */
+
+/* pre semplicitÃ  consideriamo in ternario */
+somma_cifre(0,0,0,0).
+somma_cifre(0,1,0,1).
+somma_cifre(0,2,0,2).
+
+somma_cifre(1,0,0,1).
+somma_cifre(1,1,0,2).
+somma_cifre(1,2,1,0).
+
+somma_cifre(2,0,0,2).
+somma_cifre(2,1,1,0).
+somma_cifre(2,2,1,1).
+
+/* predicato somma(num1, num2, ris) */
+somma([], N, N, 0).
+somma([], N, N1, 1):-
+    somma([1], N, N1, 0).
+/* uguali ma con arg scambiati */
+somma(N, [], N, 0).
+somma(N,[], N1,1):-
+    somma(N, [1], N1, 0).
+
+
+somma([C1|T1],[C2|T2], [C3|T3], R):-
+    somma_cifre(C1, C2, NRT, CT),
+    somma_cifre(CT, R, NRX, C3),
+    somma_cifre(NRT, NRX, _, NR),
+    somma(T1, T2, T3, NR).

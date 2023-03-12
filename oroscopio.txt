@@ -1,0 +1,76 @@
+State realizzando un servizio per la generazione automatica di oroscopi giornalieri personalizzati. Il vostro servizio 
+vuole essere innovativo. Per differenziarsi dai concorrenti vuole offrire una esperienza esclusiva. Dunque, ogni 
+giorno propone ad una persona un oroscopo dipendente dal nome della persona, dalla data di nascita e dal 
+giorno corrente. Avete scaricato un po’ di testi di oroscopi da vari siti ed avete organizzato le frasi in 10 tipi:
+SituazioneAttualeAmore, SituazioneAttualeLavoro, SituazioneAttualeSalute, SituazioneAttualeVincite, EventoFuturoAmore, 
+EventoFuturoLavoro, EventoFuturoSalute, EventoFuturoVincite, FraseGenericaFelicità, FraseGenericaEventoPositivo
+Per ciascuno di questi tipi avete raccolto un numero notevole di frasi. 
+
+messaggioPerPersona(Nome,DataDiNascita,DataCorrente,MESSAGGIO)
+
+che sia vero se MESSAGGIO è un testo composto nel modo descritto in precedenza che sia valido unico per la 
+persona con Nome e DataDiNascita per lo specifico giorno della DataCorrente.
+
+
+-------------------------------------------------------------------------------------------------------------------------
+messaggio(situazioneAttualeAmore, "piacci a qualcuna").
+messaggio(situazioneAttualeAmore, "domani incontrerai la donna della tua").
+messaggio(situazioneAttualeLavoro, "verrai promosso a breve").
+messaggio(situazioneAttualeLavoro, "domani avrai un aumento di 200 euro").
+messaggio(situazioneAttualeSalute, "domani ti passerà la febbre").
+messaggio(situazioneAttualeSalute, "non prenderai mai il covid").
+messaggio(situazioneAttualeVincite, "domani vincerai a Gratta e Vinci").
+messaggio(situazioneAttualeVincite, "vincerai stasera la schedina").
+messaggio(eventoFuturoAmore, "ti sposerai tra 2 anni").
+messaggio(eventoFuturoAmore, "troverai l'amore della tua vita tra 2 anni").
+messaggio(eventoFuturoLavoro, "lavorerai in Google").
+messaggio(eventoFuturoLavoro, "fonderai una grande impresa").
+messaggio(eventoFuturoSalute, "sarai in forma anche a 80 anni").
+messaggio(eventoFuturoSalute, "non avrai alcuna malattia fino a 90 anni").
+messaggio(eventoFuturoVincite, "quando andrai a Las Vegas vincerai 1 millione").
+messaggio(eventoFuturoVincite, "vincerai il Superenalotto una volta nella tua vita").
+messaggio(fraseGeneraleFelicita, "vivrai 100+ anni").
+messaggio(fraseGeneraleFelicita, "viaggerai per il mondo").
+messaggio(fraseGenericaEventoPositivo, "troverai tanti azionari").
+messaggio(fraseGenericaEventoPositivo, "avai gemelli").
+
+
+messaggioCasuale(_, _, _, Messaggio):-
+    bagof((Tipo, Testo), Tipo^messaggio(Tipo, Testo), Messaggi),
+    length(Messaggi, NumMsg),
+    random(1, NumMsg, RandNum),
+    kth_elem(RandNum, Messaggi, Messaggio).
+
+messaggioUnico(Nome, DataNascita, DataCorrente, Messaggio):-
+    bagof((Tipo, Testo), Tipo^messaggio(Tipo, Testo), Messaggi),
+    length(Messaggi, NumMSG),
+    hashFunc(Nome, DataNascita, DataCorrente, NumMSG, Key),
+    kth_elem(Key, Messaggi, Messaggio).
+
+hashFunc(Nome, DataNascita, DataCorrente, NumMsg, Key):-
+    atom_string(Nome, NomeString),
+    atom_string(DataNascita, DataNascitaString),
+    atom_string(DataCorrente, DataCorrenteString),
+    string_codes(NomeString, NomeCodes),
+    string_codes(DataNascitaString, DataNascitaCodes),
+    string_codes(DataCorrenteString, DataCorrenteCodes),
+    sum_list(NomeCodes, NomeSum),
+    sum_list(DataNascitaCodes, DataNascitaSum),
+    sum_list(DataCorrenteCodes, DataCorrenteSum),
+    SumAll is NomeSum * DataNascitaSum * DataCorrenteSum,
+    Key is 1 + mod(SumAll, NumMsg),
+    write(Key), nl.
+    
+    
+  
+sum_list([], 0).
+sum_list([H|T], Sum) :-
+   sum_list(T, Rest),
+   Sum is H + Rest.
+        
+
+kth_elem(1, [X|_], X).
+kth_elem(K, [_|L], X):-
+    kth_elem(M, L, X),
+    K is M + 1,
+    K > 1.

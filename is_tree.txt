@@ -1,0 +1,18 @@
+% tree sample:
+% tree(a,
+% 	tree(b,
+% 		tree(d,nil,nil),
+% 		tree(e,nil,nil)),
+% 	tree(c,
+% 		nil,
+% 		tree(f,
+% 			tree(g,nil,nil),
+% 			nil)))
+
+% In Prolog we represent the empty tree by the atom 'nil'
+
+is_tree(nil). % empty tree is a tree
+
+is_tree(tree(_, LEFT, RIGHT)):-
+    is_tree(LEFT),
+    is_tree(RIGHT).

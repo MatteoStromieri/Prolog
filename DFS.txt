@@ -1,0 +1,47 @@
+% DFS con rischio loop
+
+path(X,Y,PATH):-
+	e(X,Y).
+
+path(X,Y,PATH):-
+	e(X,Z),
+	path(Z,Y,PATH).
+
+%/////////////////////////
+% DFS salvando i nodi visitati evidando loop
+
+e(a,b).
+e(b,c).
+e(c,a).
+e(c,d).
+
+path1(X,Y,[X,Y],_):-
+	e(X,Y).
+
+path1(X,Y,[X|PATH],VISITED):-
+	e(X,Z),
+	\+ member(X,VISITED),
+	path1(Z,Y,PATH,[X|VISITED]).
+
+%//////////////////////////////////
+
+% DFS definendo max #transizioni per evitare loop
+
+path2(X,Y,[X,Y],LEN_R):-
+	LEN_R > 0,
+	e(X,Y).
+	
+
+path2(X,Y,[X|PATH],LEN_MAX):-
+	LEN_MAX > 0,
+	e(X,Z),
+	LEN_MAXmenoUNO is LEN_MAX - 1,
+	path2(Z,Y,PATH,LEN_MAXmenoUNO).
+
+
+
+
+
+
+
+

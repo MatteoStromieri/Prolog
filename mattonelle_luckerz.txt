@@ -1,0 +1,55 @@
+:- dynamic giacenza/2.
+
+%giacenza(nomeMattonella, Giacenza)
+giacenza('5x5', 4).
+giacenza('10x10', 2).
+giacenza('10x20', 3).
+giacenza('5x10', 3).
+
+mattonella('5x5', 5, 5).
+mattonella('10x10', 10, 10).
+mattonella('10x20', 10, 20).
+mattonella('5x10', 5, 10).
+
+
+pavimentazione_migliore(Lung, Larg, PaviBest, MinNumMatt):-
+    setof((Pav, NumMatt), pavimentazione_superficie(Lung, Larg, Pav, NumMatt), PavList),
+    get_min_pav(PavList, PaviBest, MinNumMatt).
+
+get_min_pav([(PavLast, NumMattLast)], PavLast, NumMattLast).
+get_min_pav([(_, NumMatt1), (Pav2, NumMatt2)|RestPavs], PaviBest, MinNumMat):-
+    NumMatt1 > NumMatt2,
+    get_min_pav([(Pav2, NumMatt2)|RestPavs], PaviBest, MinNumMat).
+get_min_pav([(Pav1, NumMatt1), (_, NumMatt2)|RestPavs], PaviBest, MinNumMat):-
+    NumMatt1 =< NumMatt2,
+    get_min_pav([(Pav1, NumMatt1)|RestPavs], PaviBest, MinNumMat).
+
+
+
+
+pavimentazione_superficie(Lunghezza, Larghezza, Pavimentazione, NumMattonelleUsate):-
+    Superficie = Lunghezza * Larghezza,
+    riempiSuperficie(Superficie, Pavimentazione),
+    length(Pavimentazione, NumMattonelleUsate).
+
+
+
+riempiSuperficie(0, []).
+riempiSuperficie(Superficie, [mattonella(NomeMattonella, Lung, Larg)|RestPavimentazione]):-
+    mattonella(NomeMattonella, Lung, Larg),
+    
+    giacenza(NomeMattonella, Giac),
+    Giac > 0,
+    GiacMinus1 is Giac - 1,
+    assert(giacenza(NomeMattonella, GiacMinus1)),
+    retract(giacenza(NomeMattonella, Giac)),
+    
+    Superficie >= Lung * Larg,
+    SuperficieRimasta is Superficie - Lung * Larg,
+    riempiSuperficie(SuperficieRimasta, RestPavimentazione).
+
+
+
+% query: pavimentazione_migliore(30, 30, P, N)
+% query: pavimentazione_superficie(10, 10, P, N)
+% query: pavimentazione_superficie(100, 100, P, N)

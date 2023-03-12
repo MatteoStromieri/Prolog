@@ -1,0 +1,22 @@
+occorrenze(_, [], 0).
+   
+occorrenze(X, [X|T], N):- !,
+    occorrenze(X, T, M),
+    N is M + 1.
+
+occorrenze(X, [_|T], N):-
+    occorrenze(X, T, N).
+    
+
+
+
+non_occorrenze(X, [X], 0):- !.
+non_occorrenze(X, [_], 1).
+
+non_occorrenze(X, [Y|T], N):-
+    X \= Y,
+    non_occorrenze(X, T, M),
+    N is M + 1.
+
+non_occorrenze(X, [X|T], N):-
+    non_occorrenze(X, T, N).

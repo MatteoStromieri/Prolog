@@ -1,0 +1,38 @@
+% elem_swapped(L1, L2, X1, X2): true if L2 is L1 with X1 and X2 swapped
+elem_swapped([X], [X], X, X).
+elem_swapped(L1, L2, X1, X2):-
+    length(L1, Len),
+    length(L2, Len),
+    member(X1, L1),
+    member(X2, L1),
+    member(X1, L2),
+    member(X2, L2),
+   
+    indexes_of(X1, L1, IndexesX1inL1, 1),
+    indexes_of(X1, L2, IndexesX1inL2, 1),
+   
+    indexes_of(X2, L1, IndexesX2inL1, 1),  
+    indexes_of(X2, L2, IndexesX2inL2, 1),
+   
+    unique_varied_elem(IndexesX1inL1, IndexesX1inL2, A1, A2),
+    unique_varied_elem(IndexesX2inL1, IndexesX2inL2, A2, A1),
+    !.
+   
+   
+%unique_varied_elem(L1, L2, A1, A2):true if L2 = L1 with A1 switched to A2, the rest in the same
+unique_varied_elem([H|T1], [H|T2], A1, A2):-
+    unique_varied_elem(T1, T2, A1, A2).
+unique_varied_elem([H1|_], [H2|_], H1, H2):-
+    H1 \= H2.
+
+
+%indexes_of(Elem, List, IndexesList, StartingIndex)
+indexes_of(_, [], [], _).
+indexes_of(X, [X|T], [CurrentCount|Rest], CurrentCount):-
+    CurrentCountPlus1 is CurrentCount + 1,
+    indexes_of(X, T, Rest, CurrentCountPlus1).
+
+indexes_of(X, [Y|T], Rest, CurrentCount):-
+    X \= Y,
+    CurrentCountPlus1 is CurrentCount + 1,
+    indexes_of(X, T, Rest, CurrentCountPlus1).

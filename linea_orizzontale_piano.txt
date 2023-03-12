@@ -1,0 +1,79 @@
+Si scriva un predicato:
+
+lineaOrizzontaleInUnPianoFattaDi(A,Lunghezza,Piano).
+
+che sia vero se:
+1) Piano rappresenta una superficie Piana 10 x 5 attraverso una lista di 10 liste (le righe) di 5 elementi,
+2) Una riga contiene una sequenza lunga Lunghezza di elementi A
+Esempio
+Il predicato è vero se:
+A = a16
+Lunghezza = 3
+Piano =
+[[a1,a1,a1,a4,a4],
+[a1,a1,a1,a4,a4],
+[a1,a1,a1,a10,a8],
+[a5,a5,a2,a2,a2],
+[a5,a5,a2,a2,a2],
+[a6,a6,a2,a2,a2],
+[a6,a6,a3,a3,a3],
+[a7,a7,a3,a3,a3],
+[a7,a7,a3,a3,a3],
+[a15,a16,a16,a16,a9]]
+            x        x      x      % che sono 3 volte a16
+
+
+
+
+lineaOrizzontaleInUnPianoFattaDi(A,Lunghezza,Piano):-
+    is_piano(Piano),
+    una_delle_righe_ha_sequenza(Piano, A, Lunghezza).
+
+una_delle_righe_ha_sequenza([RX|_], A, Lunghezza):-
+    list_has_sequence(RX, A, Lunghezza).
+una_delle_righe_ha_sequenza([RX|REST], A, Lunghezza):-
+    \+ list_has_sequence(RX, A, Lunghezza),
+    una_delle_righe_ha_sequenza(REST, A, Lunghezza).
+
+list_has_sequence(L, X, N):-
+    make_list(X, N, LX),
+    subset(L, LX).
+    
+make_list(_, 0, []).
+make_list(X, N, [X|T]):-
+    M is N - 1,
+    make_list(X, M, T),
+    !.
+    
+subset([], []).
+subset([H|Tail], [H|NTail]):-
+  subset(Tail, NTail).
+subset([_|Tail], NTail):-
+  subset(Tail, NTail).    
+
+
+is_piano([R1, R2, R3, R4, R5, R6, R7, R8, R9, R10]):-
+    length(R1, 5),
+    length(R2, 5),
+    length(R3, 5),
+    length(R4, 5),
+    length(R5, 5),
+    length(R6, 5),
+    length(R7, 5),
+    length(R8, 5),
+    length(R9, 5),
+    length(R10, 5).
+
+% query: 
+lineaOrizzontaleInUnPianoFattaDi(a16, 3, [
+[a1,a1,a1,a4,a4],
+[a1,a1,a1,a4,a4],
+[a1,a1,a1,a10,a8],
+[a5,a5,a2,a2,a2],
+[a5,a5,a2,a2,a2],
+[a6,a6,a2,a2,a2],
+[a6,a6,a3,a3,a3],
+[a7,a7,a3,a3,a3],
+[a7,a7,a3,a3,a3],
+[a15,a16,a16,a16,a9]
+])

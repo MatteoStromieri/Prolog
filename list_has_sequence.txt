@@ -1,0 +1,19 @@
+% list_has_sequence(L, X, N): true if L has a contiguous sequence of N times X
+
+Idea: L has a sequence of N times X if there is a list of N times X that is subset of L
+
+list_has_sequence(L, X, N):-
+    make_list(X, N, LX),
+    subset(L, LX).
+    
+make_list(_, 0, []).
+make_list(X, N, [X|T]):-
+    M is N - 1,
+    make_list(X, M, T),
+    !.
+    
+subset([], []).
+subset([H|Tail], [H|NTail]):-
+  subset(Tail, NTail).
+subset([_|Tail], NTail):-
+  subset(Tail, NTail).

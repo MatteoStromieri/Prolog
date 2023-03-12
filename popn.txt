@@ -1,0 +1,22 @@
+&popn(List, N, ListOut, Elem): returns the list without the N-th element and the N-th element itself
+popn([H|T],1,[T],H).
+popn([_], N, _, _):-
+    !,
+    N > 1,
+    fail.
+
+popn(L, N, LO, E):-
+    firstn(L, N, L1N), % L1N sono i primi N elementi di L
+    pop_last(L1N, L1, E), %L1 è L1N tolto l'ultimo elemento, cioè tolto l'N-esimo elemento
+	append(L1, L2, LO), % Lista Output è L1 concat L2
+    append(L1N, L2, L). % Lista originale è L1N concat L2
+
+
+
+pop_last([E], [], E).
+pop_last([H|T], [H|L], E):-
+    pop_last(T, L, E).
+
+ firstn(L, N, L1):-
+    append(L1, _, L),
+    length(L1, N).
